@@ -48,9 +48,14 @@ subroutine initial(box, uboundary)
 
     origin = int(5./box%con%hig*nnz)+1+m
     
-    box%dx = box%con%wid/dble(nnx-1)
-    box%dz = box%con%hig/dble(nnz-1)
-    
+    box%dxm = box%con%wid/dble(nnx-1)
+    box%dzm = box%con%hig/dble(nnz-1)
+
+    forall(i=2:ix) box%dx(i)=0.5*(box%dxm(i-1)+box%dxm(i))
+    forall(i=2:iz) box%dz(i)=0.5*(box%dzm(i-1)+box%dzm(i))
+    box%dx(1) = box%dx(2)
+    box%dz(1) = box%dz(2)
+
     forall(i=1:ix) box%x(i)=box%con%dx*(nx*(box%con%imx-1)+i-m)
     forall(i=1:iz) box%z(i)=box%con%dz*(nz*(box%con%imz-1)+i-origin)
     forall(i=1:iiz) zz(i)=box%con%dz*(i-origin)
